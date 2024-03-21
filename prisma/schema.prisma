@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +5,448 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model books {
+  ISBN               Int               @id @db.UnsignedInt
+  Title              String            @db.VarChar(255)
+  Authors            String            @db.VarChar(255)
+  PublicationDate    DateTime          @db.Date
+  Genre              String?           @db.VarChar(100)
+  Edition            String?           @db.VarChar(100)
+  Publisher          String?           @db.VarChar(255)
+  Language           String            @db.VarChar(50)
+  PageCount          Int?              @db.UnsignedInt
+  Description        String?           @db.Text
+  CoverImageURL      String?           @db.VarChar(255)
+  AvailabilityStatus String            @db.VarChar(50)
+  LocationShelf      String?           @db.VarChar(100)
+  Price              Decimal?          @db.Decimal(10, 2)
+  AverageRating      Decimal?          @db.Decimal(3, 2)
+  TotalRatings       Int?
+  CreatedDate        DateTime          @default(now()) @db.DateTime(0)
+  UpdatedDate        DateTime          @default(now()) @db.DateTime(0)
+  Stock              Int               @db.UnsignedInt
+  NumberCheckedOut   Int               @default(0) @db.UnsignedInt
+  NumberHeld         Int               @default(0) @db.UnsignedInt
+  NumberAvailable    Int               @db.UnsignedInt
+  Lost_Damaged       Int?              @default(0) @map("Lost/Damaged")
+  LOC_Class          String            @map("LOC Class") @db.Char(1)
+  LOC_Subclass       String            @map("LOC Subclass") @db.VarChar(2)
+  LOC_Sub_Number     Int               @map("LOC Sub Number")
+  LOC_Cutter_Letter  String            @map("LOC Cutter Letter") @db.VarChar(2)
+  LOC_Cutter_Dec     Float             @map("LOC Cutter Dec")
+  LOC_Final_Line     String?           @map("LOC Final Line") @db.VarChar(45)
+  checkin            checkin[]
+  facultycheckout    facultycheckout[]
+  holds              holds[]
+  studentcheckout    studentcheckout[]
+}
+
+model checkin {
+  CheckinID                                                    Int                      @id @default(autoincrement())
+  StudentOrFaculty                                             checkin_StudentOrFaculty
+  StudentID                                                    Int?
+  StudentCheckedOutID                                          Int?
+  FacultyID                                                    Int?
+  FacultyCheckOutID                                            Int?
+  ItemType                                                     checkin_ItemType
+  BookISBN                                                     Int?                     @db.UnsignedInt
+  DigitalCallNum                                               String?                  @db.VarChar(225)
+  SerialISSN                                                   Int?                     @db.UnsignedInt
+  CheckInTime                                                  DateTime                 @db.DateTime(0)
+  books                                                        books?                   @relation(fields: [BookISBN], references: [ISBN], onDelete: NoAction, onUpdate: NoAction, map: "BookCheckin")
+  digitalmediaitem                                             digitalmediaitem?        @relation(fields: [DigitalCallNum], references: [CallNumber], onDelete: NoAction, onUpdate: NoAction, map: "DigiCheckin")
+  facultycheckout_checkin_FacultyCheckOutIDTofacultycheckout   facultycheckout?         @relation("checkin_FacultyCheckOutIDTofacultycheckout", fields: [FacultyCheckOutID], references: [CheckOutID], onDelete: NoAction, onUpdate: NoAction, map: "FacCheckedOutID")
+  faculty                                                      faculty?                 @relation(fields: [FacultyID], references: [FacultyID], onDelete: NoAction, onUpdate: NoAction, map: "FacultyCheckin")
+  serialpublication                                            serialpublication?       @relation(fields: [SerialISSN], references: [ISSN], onDelete: NoAction, onUpdate: NoAction, map: "SerialCheckin")
+  studentcheckout_checkin_StudentCheckedOutIDTostudentcheckout studentcheckout?         @relation("checkin_StudentCheckedOutIDTostudentcheckout", fields: [StudentCheckedOutID], references: [CheckOutID], onDelete: NoAction, onUpdate: NoAction, map: "StuCheckedOutID")
+  students                                                     students?                @relation(fields: [StudentID], references: [StudentID], onDelete: NoAction, onUpdate: NoAction, map: "StudentCheckin")
+  facultycheckout_facultycheckout_CheckInIDTocheckin           facultycheckout[]        @relation("facultycheckout_CheckInIDTocheckin")
+  studentcheckout_studentcheckout_CheckInIDTocheckin           studentcheckout[]        @relation("studentcheckout_CheckInIDTocheckin")
+  transactionreciepts                                          transactionreciepts[]
+
+  @@index([BookISBN], map: "BookCheckin_idx")
+  @@index([DigitalCallNum], map: "DigiCheckin_idx")
+  @@index([FacultyCheckOutID], map: "FacCheckedOutID")
+  @@index([FacultyID], map: "FacultyCheckin_idx")
+  @@index([SerialISSN], map: "SerialCheckin_idx")
+  @@index([StudentCheckedOutID], map: "StuCheckedOutID_idx")
+  @@index([StudentID], map: "StudentCheckin_idx")
+}
+
+model computer {
+  ComputerNumber Int      @id
+  CheckedOut     Boolean?
+  TimeCheckedOut Int?
+}
+
+model digitalmediaitem {
+  CallNumber       String            @id @db.VarChar(255)
+  Name             String            @db.VarChar(255)
+  Producer         String?           @db.VarChar(255)
+  Stock            Int               @db.UnsignedInt
+  NumberCheckedOut Int               @default(0) @db.UnsignedInt
+  NumberHeld       Int               @default(0) @db.UnsignedInt
+  NumberAvailable  Int               @db.UnsignedInt
+  Lost_Damaged     Int?              @default(0) @map("Lost/Damaged")
+  checkin          checkin[]
+  facultycheckout  facultycheckout[]
+  holds            holds[]
+  studentcheckout  studentcheckout[]
+}
+
+model faculty {
+  FacultyID           Int                   @id
+  FirstName           String                @db.VarChar(50)
+  LastName            String                @db.VarChar(50)
+  DateOfBirth         DateTime              @db.Date
+  Gender              faculty_Gender
+  Address             String                @db.VarChar(100)
+  ContactNumber       String?               @db.VarChar(20)
+  EmailAddress        String                @db.VarChar(100)
+  Department          String                @db.VarChar(50)
+  Position            String                @db.VarChar(20)
+  SchoolIDNumber      String                @db.VarChar(50)
+  DateHired           DateTime?             @db.Date
+  Status              String?               @db.VarChar(20)
+  CreatedDate         DateTime              @db.DateTime(0)
+  UpdatedDate         DateTime              @db.DateTime(0)
+  checkin             checkin[]
+  facultycheckout     facultycheckout[]
+  fines               fines[]
+  holds               holds[]
+  transactionreciepts transactionreciepts[]
+}
+
+model facultycheckout {
+  CheckOutID                                         Int                      @id @default(autoincrement())
+  FacultyID                                          Int
+  ItemType                                           facultycheckout_ItemType
+  BookISBN                                           Int?                     @db.UnsignedInt
+  DigitalCallNum                                     String?                  @db.VarChar(225)
+  SerialISSN                                         Int?                     @db.UnsignedInt
+  CheckedOut                                         DateTime                 @db.DateTime(0)
+  DueDate                                            DateTime?                @db.Date
+  CheckInID                                          Int?
+  CheckInDate                                        DateTime?                @db.Date
+  Overdue                                            Int                      @default(0) @db.TinyInt
+  checkin_checkin_FacultyCheckOutIDTofacultycheckout checkin[]                @relation("checkin_FacultyCheckOutIDTofacultycheckout")
+  books                                              books?                   @relation(fields: [BookISBN], references: [ISBN], onDelete: NoAction, onUpdate: NoAction, map: "BookCheckOut")
+  digitalmediaitem                                   digitalmediaitem?        @relation(fields: [DigitalCallNum], references: [CallNumber], onDelete: NoAction, onUpdate: NoAction, map: "DigiCheckOut")
+  checkin_facultycheckout_CheckInIDTocheckin         checkin?                 @relation("facultycheckout_CheckInIDTocheckin", fields: [CheckInID], references: [CheckinID], onDelete: NoAction, onUpdate: NoAction, map: "FacCheckedInID")
+  faculty                                            faculty                  @relation(fields: [FacultyID], references: [FacultyID], onDelete: NoAction, onUpdate: NoAction, map: "FacultyCheckOut")
+  serialpublication                                  serialpublication?       @relation(fields: [SerialISSN], references: [ISSN], onDelete: NoAction, onUpdate: NoAction, map: "SerialCheckOut")
+  fines                                              fines?
+  transactionreciepts                                transactionreciepts[]
+
+  @@index([BookISBN], map: "BookCheckOut_idx")
+  @@index([CheckInID], map: "CcheckInID_idx")
+  @@index([DigitalCallNum], map: "DigiCheckOut_idx")
+  @@index([FacultyID], map: "FacultyCheckOut_idx")
+  @@index([SerialISSN], map: "SerialCheckOut_idx")
+}
+
+model fines {
+  FineID              Int                    @id @default(autoincrement())
+  StudentOrFaculty    fines_StudentOrFaculty
+  StudentID           Int?
+  FacutlyID           Int?
+  TypeOfFine          fines_TypeOfFine
+  FineAmount          Decimal                @db.Decimal(10, 2)
+  FineDate            DateTime               @db.DateTime(0)
+  FineDueDate         DateTime               @db.Date
+  PaymentStatus       fines_PaymentStatus
+  PaymentDate         DateTime?              @db.DateTime(0)
+  Notes               String?                @db.Text
+  CreatedDate         DateTime               @default(now()) @db.DateTime(0)
+  UpdatedDate         DateTime               @default(now()) @db.DateTime(0)
+  StudentCheckout     Int?                   @unique(map: "StudentCheckout_ID_UNIQUE")
+  FacultyCheckout     Int?                   @unique(map: "FacultyCheckout_ID_UNIQUE")
+  StudentCheckoutID   Int?                   @unique(map: "StudentCheckoutID_UNIQUE")
+  FacultyCheckoutID   Int?                   @unique(map: "finescol_UNIQUE")
+  facultycheckout     facultycheckout?       @relation(fields: [FacultyCheckout], references: [CheckOutID], onDelete: NoAction, onUpdate: NoAction, map: "facultyCheckoutForFine")
+  students            students?              @relation(fields: [StudentID], references: [StudentID], onDelete: NoAction, onUpdate: NoAction, map: "fines_ibfk_2")
+  faculty             faculty?               @relation(fields: [FacutlyID], references: [FacultyID], onDelete: NoAction, onUpdate: NoAction, map: "fines_ibfk_3")
+  studentcheckout     studentcheckout?       @relation(fields: [StudentCheckout], references: [CheckOutID], onDelete: NoAction, onUpdate: NoAction, map: "studentCheckoutForFine")
+  transactionreciepts transactionreciepts[]
+
+  @@index([StudentID], map: "fines_ibfk_2")
+  @@index([FacutlyID], map: "fines_ibfk_3_idx")
+}
+
+model holds {
+  HoldID              Int                    @id @default(autoincrement())
+  StudentOrFaculty    holds_StudentOrFaculty
+  StudentID           Int?
+  FacultyID           Int?
+  ItemType            holds_ItemType
+  BookISBN            Int?                   @db.UnsignedInt
+  DigitalCallNum      String?                @db.VarChar(225)
+  SerialISSN          Int?                   @db.UnsignedInt
+  Pending             Int                    @db.TinyInt
+  HoldPosted          DateTime               @db.DateTime(0)
+  CheckInDate         DateTime?              @db.Date
+  ExprirationDate     DateTime?              @db.Date
+  HoldResult          holds_HoldResult?
+  books               books?                 @relation(fields: [BookISBN], references: [ISBN], onDelete: NoAction, onUpdate: NoAction, map: "BookHold")
+  digitalmediaitem    digitalmediaitem?      @relation(fields: [DigitalCallNum], references: [CallNumber], onDelete: NoAction, onUpdate: NoAction, map: "DigiHold")
+  faculty             faculty?               @relation(fields: [FacultyID], references: [FacultyID], onDelete: NoAction, onUpdate: NoAction, map: "FacultyHold")
+  serialpublication   serialpublication?     @relation(fields: [SerialISSN], references: [ISSN], onDelete: NoAction, onUpdate: NoAction, map: "SerialHold")
+  students            students?              @relation(fields: [StudentID], references: [StudentID], onDelete: NoAction, onUpdate: NoAction, map: "StudentHold")
+  transactionreciepts transactionreciepts[]
+
+  @@index([BookISBN], map: "BookHold_idx")
+  @@index([DigitalCallNum], map: "DigiHold_idx")
+  @@index([FacultyID], map: "FacultyHold_idx")
+  @@index([SerialISSN], map: "SerialHold_idx")
+  @@index([StudentID], map: "StudentHold_idx")
+}
+
+model library_events {
+  EventID              Int       @id @default(autoincrement())
+  EventName            String    @db.VarChar(255)
+  Description          String?   @db.Text
+  EventDate            DateTime  @db.DateTime(0)
+  EventLocation        String?   @db.VarChar(255)
+  Organizer            String    @db.VarChar(255)
+  ContactEmail         String    @db.VarChar(255)
+  ContactPhone         String?   @db.VarChar(20)
+  MaxAttendees         Int?
+  CurrentAttendees     Int?
+  RegistrationRequired Boolean   @default(false)
+  RegistrationDeadline DateTime? @db.DateTime(0)
+  EventStatus          String    @db.VarChar(50)
+  CreatedDate          DateTime? @default(now()) @db.DateTime(0)
+  UpdatedDate          DateTime? @default(now()) @db.DateTime(0)
+}
+
+model library_staff {
+  StaffID             Int                  @id @db.UnsignedInt
+  FirstName           String               @db.VarChar(50)
+  LastName            String               @db.VarChar(50)
+  DateOfBirth         DateTime             @db.Date
+  Gender              library_staff_Gender
+  Address             String?              @db.VarChar(255)
+  ContactNumber       String?              @db.VarChar(20)
+  EmailAddress        String?              @db.VarChar(100)
+  Position            String               @db.VarChar(100)
+  Department          String               @db.VarChar(100)
+  JoiningDate         DateTime             @db.Date
+  Salary              Decimal              @db.Decimal(10, 2)
+  SupervisorID        Int?                 @db.UnsignedInt
+  Status              library_staff_Status
+  CreatedDate         DateTime             @db.DateTime(0)
+  UpdatedDate         DateTime             @db.DateTime(0)
+  library_staff       library_staff?       @relation("library_staffTolibrary_staff", fields: [SupervisorID], references: [StaffID], onDelete: NoAction, onUpdate: NoAction, map: "supervisor")
+  other_library_staff library_staff[]      @relation("library_staffTolibrary_staff")
+
+  @@index([StaffID, SupervisorID], map: "SupervisorID_idx")
+  @@index([SupervisorID], map: "supervisor_idx")
+}
+
+model serialpublication {
+  ISSN             Int               @id @db.UnsignedInt
+  Publication_Name String            @map("Publication Name") @db.VarChar(255)
+  Edition          String?           @db.VarChar(45)
+  Publisher        String?           @db.VarChar(255)
+  Stock            Int               @db.UnsignedInt
+  NumberCheckedOut Int               @default(0) @db.UnsignedInt
+  NumberHeld       Int               @default(0) @db.UnsignedInt
+  NumberAvailable  Int               @db.UnsignedInt
+  Lost_Damaged     Int?              @default(0) @map("Lost/Damaged")
+  checkin          checkin[]
+  facultycheckout  facultycheckout[]
+  holds            holds[]
+  studentcheckout  studentcheckout[]
+}
+
+model studentcheckout {
+  CheckOutID                                           Int                      @id @default(autoincrement())
+  StudentID                                            Int
+  ItemType                                             studentcheckout_ItemType
+  BookISBN                                             Int?                     @db.UnsignedInt
+  DigitalCallNum                                       String?                  @db.VarChar(225)
+  SerialISSN                                           Int?                     @db.UnsignedInt
+  CheckedOut                                           DateTime                 @db.DateTime(0)
+  DueDate                                              DateTime?                @db.Date
+  CheckInID                                            Int?
+  CheckInDate                                          DateTime?                @db.Date
+  Overdue                                              Int                      @default(0) @db.TinyInt
+  checkin_checkin_StudentCheckedOutIDTostudentcheckout checkin[]                @relation("checkin_StudentCheckedOutIDTostudentcheckout")
+  fines                                                fines?
+  books                                                books?                   @relation(fields: [BookISBN], references: [ISBN], onDelete: NoAction, onUpdate: NoAction, map: "BookCheckOutStu")
+  digitalmediaitem                                     digitalmediaitem?        @relation(fields: [DigitalCallNum], references: [CallNumber], onDelete: NoAction, onUpdate: NoAction, map: "DigiCheckOutStu")
+  serialpublication                                    serialpublication?       @relation(fields: [SerialISSN], references: [ISSN], onDelete: NoAction, onUpdate: NoAction, map: "SerialCheckOutStu")
+  checkin_studentcheckout_CheckInIDTocheckin           checkin?                 @relation("studentcheckout_CheckInIDTocheckin", fields: [CheckInID], references: [CheckinID], onDelete: NoAction, onUpdate: NoAction, map: "StuCheckedInID")
+  students                                             students                 @relation(fields: [StudentID], references: [StudentID], onDelete: NoAction, onUpdate: NoAction, map: "StudentCheckOut")
+  transactionreciepts                                  transactionreciepts[]
+
+  @@index([BookISBN], map: "BookCheckOutStu_idx")
+  @@index([CheckInID], map: "CheckedInID_idx")
+  @@index([DigitalCallNum], map: "DigiCheckOutStu_idx")
+  @@index([SerialISSN], map: "SerialCheckOutStu_idx")
+  @@index([StudentID], map: "StudentCheckOut_idx")
+}
+
+model students {
+  StudentID              Int                   @id
+  FirstName              String                @db.VarChar(50)
+  LastName               String                @db.VarChar(50)
+  DateOfBirth            DateTime              @db.Date
+  Gender                 students_Gender
+  Address                String                @db.VarChar(100)
+  ContactNumber          String?               @db.VarChar(20)
+  EmailAddress           String                @db.VarChar(100)
+  GuardiansName          String?               @db.VarChar(100)
+  GuardiansContactNumber String?               @db.VarChar(20)
+  GradeYearLevel         String                @db.VarChar(20)
+  Section                String?               @db.VarChar(50)
+  SchoolIDNumber         String                @db.VarChar(50)
+  DateEnrolled           DateTime              @db.Date
+  Status                 String                @db.VarChar(20)
+  CreatedDate            DateTime              @db.DateTime(0)
+  UpdatedDate            DateTime              @db.DateTime(0)
+  checkin                checkin[]
+  fines                  fines[]
+  holds                  holds[]
+  studentcheckout        studentcheckout[]
+  transactionreciepts    transactionreciepts[]
+}
+
+model transactionreciepts {
+  TransactionID    Int                                  @id @default(autoincrement())
+  StudentOrFaculty transactionreciepts_StudentOrFaculty
+  StudentID        Int?
+  FacultyID        Int?
+  TransactionType  transactionreciepts_TransactionType
+  FineID           Int?
+  HoldID           Int?
+  StuCheckoutID    Int?
+  FacCheckoutID    Int?
+  CheckinID        Int?
+  TransactionDate  DateTime                             @db.DateTime(0)
+  Notes            String?                              @db.Text
+  CreatedDate      DateTime?                            @default(now()) @db.DateTime(0)
+  UpdatedDate      DateTime?                            @default(now()) @db.DateTime(0)
+  checkin          checkin?                             @relation(fields: [CheckinID], references: [CheckinID], onDelete: NoAction, onUpdate: NoAction, map: "checkin")
+  facultycheckout  facultycheckout?                     @relation(fields: [FacCheckoutID], references: [CheckOutID], onDelete: NoAction, onUpdate: NoAction, map: "fac_checkout")
+  fines            fines?                               @relation(fields: [FineID], references: [FineID], onDelete: NoAction, onUpdate: NoAction, map: "fine")
+  holds            holds?                               @relation(fields: [HoldID], references: [HoldID], onDelete: NoAction, onUpdate: NoAction, map: "hold")
+  studentcheckout  studentcheckout?                     @relation(fields: [StuCheckoutID], references: [CheckOutID], onDelete: NoAction, onUpdate: NoAction, map: "stu_checkout")
+  students         students?                            @relation(fields: [StudentID], references: [StudentID], onDelete: NoAction, onUpdate: NoAction, map: "transactionreciepts_ibfk_1")
+  faculty          faculty?                             @relation(fields: [FacultyID], references: [FacultyID], onDelete: NoAction, onUpdate: NoAction, map: "transactionreciepts_ibfk_2")
+
+  @@index([CheckinID], map: "checkin_idx")
+  @@index([FacCheckoutID], map: "fac_checkout_idx")
+  @@index([FineID], map: "fine_idx")
+  @@index([HoldID], map: "hold_idx")
+  @@index([StuCheckoutID], map: "stu_checkout_idx")
+  @@index([StudentID], map: "transactions_ibfk_1")
+  @@index([FacultyID], map: "transactions_ibfk_2_idx")
+}
+
+enum checkin_StudentOrFaculty {
+  Student
+  Faculty
+}
+
+enum fines_StudentOrFaculty {
+  Student
+  Faculty
+}
+
+enum holds_StudentOrFaculty {
+  Student
+  Faculty
+}
+
+enum transactionreciepts_StudentOrFaculty {
+  student
+  faculty
+}
+
+enum facultycheckout_ItemType {
+  Book
+  Digital_Media      @map("Digital Media")
+  Serial_Publication @map("Serial Publication")
+}
+
+enum studentcheckout_ItemType {
+  Book
+  Digital_Media      @map("Digital Media")
+  Serial_Publication @map("Serial Publication")
+}
+
+enum faculty_Gender {
+  Man
+  Woman
+  Nonbinary
+  Gender_Queer        @map("Gender Queer")
+  Gender_Nonconformng @map("Gender Nonconformng")
+  Other
+}
+
+enum fines_TypeOfFine {
+  Late
+  Damaged
+  Lost
+}
+
+enum holds_ItemType {
+  Book
+  Digital_Media      @map("Digital Media")
+  Serial_Publication @map("Serial Publication")
+}
+
+enum library_staff_Gender {
+  Man
+  Woman
+  Nonbinary
+  Gender_Queer        @map("Gender Queer")
+  Gender_Nonconformng @map("Gender Nonconformng")
+  Other
+}
+
+enum students_Gender {
+  Man
+  Woman
+  Nonbinary
+  Gender_Queer        @map("Gender Queer")
+  Gender_Nonconformng @map("Gender Nonconformng")
+  Other
+}
+
+enum transactionreciepts_TransactionType {
+  Fine
+  Fine_Paid            @map("Fine Paid")
+  Item_Determined_Lost @map("Item Determined Lost")
+  Hold_Placed          @map("Hold Placed")
+  Hold_Removed         @map("Hold Removed")
+  Checkout
+  Checkin
+}
+
+enum checkin_ItemType {
+  Book
+  Digital_Media      @map("Digital Media")
+  Serial_Publication @map("Serial Publication")
+}
+
+enum fines_PaymentStatus {
+  Paid
+  Unpaid
+}
+
+enum holds_HoldResult {
+  Checked_Out  @map("Checked Out")
+  Hold_Expired @map("Hold Expired")
+  Voided
+}
+
+enum library_staff_Status {
+  Active
+  Inactive
+  On_Leave @map("On Leave")
 }
