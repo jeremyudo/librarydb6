@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import './adminSignIn.css'; // Make sure the CSS file is correctly linked
 
-function AdminsignIn() {
+function AdminSignIn() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -54,4 +54,4 @@ function AdminsignIn() {
   );
 }
 
-export default AdminsignIn;
+export default AdminSignIn;

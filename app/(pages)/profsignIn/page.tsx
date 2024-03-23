@@ -2,12 +2,12 @@
 import React, { useState } from 'react';
 import './profSignIn.css'
 
-function profsignIn() {
+function ProfSignIn() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
   
-    const handleSignIn = (e: any) => {
+    const handleSignIn = (e:any) => {
       e.preventDefault();
   
       if (!username || !password) {
@@ -47,11 +47,10 @@ function profsignIn() {
               />
             </div>
             <button type="submit" className="signIn">Sign In</button>
-  
           </form>
         </div>
       </div>
     );
   }
   
-  export default profsignIn;
+  export default ProfSignIn;

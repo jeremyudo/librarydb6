@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import './libSignIn.css'; // Make sure the CSS file is correctly linked
 
-function LibsignIn() {
+function LibSignIn() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -54,4 +54,4 @@ function LibsignIn() {
   );
 }
 
-export default LibsignIn;
+export default LibSignIn;
