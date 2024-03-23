@@ -12,6 +12,12 @@ function Navbar() {
         <li className="signInButton">
           <Link href="/signIn">Sign in</Link>
         </li>
+        <li className="hours">
+          Hours
+        </li>
+        <li className="events">
+          Events
+        </li>
       </ul>
     </nav>
   );

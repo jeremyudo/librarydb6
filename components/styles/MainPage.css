@@ -1,82 +1,124 @@
-body, .App {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding-top: 60px; /* Adjusted to prevent overlap with navbar */
-    background-color: #e8e3e3;
-    color: #fff; /* Ensure text is readable against the darker background */
-  }
+.topReads {
+  margin-top: 40px;
+  margin-bottom: 0px;
+}
+
+.welcome{
+  margin-top:45px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 50px;
+}
+
+.topReadsText{
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 40px;
+  position: relative;
+  top:-8px;
+}
+
+.searchText{
+  margin-bottom:0;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 25px;
+}
+
+
+.topReadsGallery {
+  display: flex;
+  width: 100%;
+  flex-wrap: nowrap;
+  gap: 7px; /* Adjusts the space between items */
+  justify-content: center; /* Center items horizontally */
+}
+
+.topReadsGallery .book {
+  width: 300px; /* Adjust based on your preference */
+  text-align: center;
+  height: auto;
+  background-color: white; /* Centers the book title under the image */
+  border-radius: 15px;
+  padding-bottom: 0px;
+  padding-right: 10px;
+  padding-left: 8px;
+  /* border: 3px solid #0e4cc8; */
+}
+
+.topReadsGallery img {
+  width: 100%; /* Makes the image fill the container */
+  position: relative;
+  min-height: 450px;
+  top: 0px;
+  height: auto; /* Keeps the aspect ratio of the image */
+  /*border-radius: 15px; Optional: adds rounded corners to the images */
+  border: 3px solid rgb(0, 0, 0);
+}
+
+
+.searchForm {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  height: auto;
+  width: auto;
   
-  h1, h2 {
-    color: #fff;
-  }
-  
-  .searchForm {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-  }
-  
-  .searchForm input[type="text"] {
-    padding: 10px;
-    margin-right: 10px;
-    width: 300px; 
-    border-radius: 5px;
-    border: none;
-  }
-  
-  .searchForm button {
-    padding: 10px;
-    cursor: pointer;
-    background-color: #583c3c;
-    color: white;
-    border: none;
-    border-radius: 5px;
-  }
-  
-  /* Hover effect for buttons */
-  .searchForm button:hover {
-    background-color: #7c5454;
-  }
-  
-  /* Further styling for the home content */
-  .homeContent {
-    text-align: center;
-    padding: 20px;
-  }
-  
-  
-  body {
-    padding-top: 50px;
-  }
-  
-  
-  .App {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    background-color: #cecaca;
-  }
-  
-  h1, h2 {
-    color: #333;
-  }
-  
-  #book-list {
-    margin-bottom: 20px;
-  }
-  
-  .book {
-    background-color: #9e8b8b;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
-  
-  #book-form > input[type="text"] {
-    padding: 10px;
-    margin-right: 10px;
-  }
-  
-  #book-form > input[type="submit"] {
-    padding: 10px;
-    cursor: pointer;
-  }
+}
+
+.searchForm input[type="text"] {
+  padding: 10px;
+  margin-right: 10px;
+  width: 500px; 
+  height: 4s0px;
+  border-radius: 5px;
+  border: 3px solid black;
+}
+
+.searchForm input::placeholder {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 18px;
+}
+
+.searchForm button {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #583c3c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  border: 3px solid black;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 18px;
+}
+
+/* Hover effect for buttons */
+.searchForm button:hover {
+  background-color: #7c5454;
+}
+
+/* Further styling for the home content */
+.homeContent {
+  text-align: center;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.info{
+  background-color: #94c3e8;
+  position: absolute;
+  top: 1200px;
+  right: 0px;
+  margin-bottom: 20px;
+  width: 100%px;
+  height: auto;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 18px;
+}
+
+.aboutText{
+  font-size: 15px;
+  margin-top: 0px;
+}
+
+.aboutHead{
+  font-size: 20px;
+  margin-bottom: 2px;;
+}

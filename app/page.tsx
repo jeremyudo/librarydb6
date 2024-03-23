@@ -1,5 +1,4 @@
 
-
 import HomePage from "@/components/MainPage";
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
