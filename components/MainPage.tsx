@@ -6,7 +6,7 @@
 import axios from "axios"
 import React, { useState } from 'react';
 //import React, { useEffect, useState } from 'react';
-import './styles/MainPage.css'
+import './styles/MainPage.css';
 import { Student } from '@/types';
 
 function HomePage() {
@@ -18,8 +18,6 @@ function HomePage() {
     { id: 3, imgSrc: './images/book3.jpeg', title: 'Book 3 Title'},
   ]);
 
-  
-  
   const handleSearch = (event: any) => {
     event.preventDefault();
     console.log('Searching for', searchTerm);

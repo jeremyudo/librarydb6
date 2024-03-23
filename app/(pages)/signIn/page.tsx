@@ -5,7 +5,7 @@
 import React, { useState } from 'react';
 import './signIn.css'; // Make sure the CSS file is correctly linked
 import Navbar from '@/components/Navbar';
-import Link from 'next/link'
+import Link from 'next/link';
 
 
 function SignInPage() {

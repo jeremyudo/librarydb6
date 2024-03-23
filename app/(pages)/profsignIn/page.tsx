@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react';
-import './profSignIn.css'
+import './profSignIn.css';
 
 function ProfSignIn() {
     const [username, setUsername] = useState('');
