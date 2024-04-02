@@ -92,3 +92,21 @@
   color: rgb(5, 5, 5);
   border: 2px solid rgb(10, 10, 10);
 }
+
+/* Added styling for the "Add Book" button */
+.addBookButton {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  padding: 20px 30px;
+  position: absolute;
+  top: 6px;
+  right: 450px; /* Adjust the positioning according to your preference */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid rgb(7, 7, 7); /* Adjust border color as needed */
+}
+
+.addBookButton:hover {
+  background-color: #7c6a6a;
+}

@@ -1,0 +1,8 @@
+/* add_book.css */
+.addBookContent {
+    text-align: center; /* Center align text */
+    margin-top: 50px; /* Add some top margin for spacing */
+    font-family: Arial, sans-serif;
+    background-color: #ff0000;
+    color: black; /* Set text color to black */
+}

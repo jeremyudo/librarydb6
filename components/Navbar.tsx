@@ -18,6 +18,9 @@ function Navbar() {
         <li className="events">
           Events
         </li>
+        <li className="addBookButton">
+          <Link href="/add_book">Add Book</Link>
+        </li>
       </ul>
     </nav>
   );
