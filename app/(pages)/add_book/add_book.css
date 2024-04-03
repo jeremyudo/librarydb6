@@ -1,8 +1,65 @@
 /* add_book.css */
 .addBookContent {
-    text-align: center; /* Center align text */
-    margin-top: 50px; /* Add some top margin for spacing */
-    font-family: Arial, sans-serif;
-    background-color: #ff0000;
-    color: black; /* Set text color to black */
+    display: flex;
+    justify-content: space-around;
 }
+
+.formContainer {
+    width: 40%;
+}
+
+.displayContainer {
+    width: 40%;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+p {
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+/* add_book.css */
+.blackBar {
+    border: 2px solid black; /* Black border */
+    padding: 10px; /* Padding for spacing */
+    margin-bottom: 20px; /* Add some bottom margin for spacing */
+  }
+  
+  /* add_book.css */
+.addBookContent {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100vh; /* Ensure the content takes up the full height of the viewport */
+  }
+  
+  .blackBar {
+    border: 2px solid black; /* Black border */
+    padding: 10px; /* Padding for spacing */
+  }
+  
+  /* Additional style for label */
+  .blackBar label {
+    display: block; /* Ensure label is displayed as a block element */
+    margin-bottom: 5px; /* Add some bottom margin for spacing */
+  }
+  
