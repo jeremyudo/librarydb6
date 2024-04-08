@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState, useRef } from 'react';
-import './addBook.css'; // Make sure the CSS file is correctly linked
+import './add_book.css'; // Make sure the CSS file is correctly linked
 import Navbar from '@/components/Navbar';
 import Link from 'next/link';
 import styles from "@/styles/Home.module.scss";
